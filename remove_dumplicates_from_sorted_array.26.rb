@@ -1,3 +1,5 @@
+# remove array duplicate element, return length
+
 arr = Array.new(100) { rand(0..100) }
 
 def remove_dumplicates(nums)
