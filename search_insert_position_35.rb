@@ -1,6 +1,5 @@
 arr = Array.new(10) { rand(0..9) }.sort.uniq
 
-
 def search_insert(nums, target)
     is_find = nums.index(target)
 
