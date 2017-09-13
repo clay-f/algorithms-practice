@@ -27,10 +27,10 @@ def get_next(val, arr)
 end
 
 def match(origin, val)
-  origin.each do |i|
-    return true if val.select { |j| j == i}
-  end
-  return false
+        origin.each do |i|
+                return true if val.select { |j| j == i}
+end
+        return false
 end
 
 a = Interval.new(1, 3)
