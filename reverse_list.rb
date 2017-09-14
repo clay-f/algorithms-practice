@@ -1,4 +1,4 @@
-require 'byebug'
+require 'pry'
 # reverse list
 
 class Node
@@ -9,7 +9,6 @@ class Node
     @next = t_next
   end
 end
-
 
 def reverse_node(node)
   if node.nil?
@@ -54,6 +53,6 @@ two.next = three
 three.next = four
 four.next = five
 
-a =  reverse_node(one)
-byebug
-puts "hello"
+p reverse_node(one)
+
+binding.pry
