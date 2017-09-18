@@ -54,5 +54,3 @@ three.next = four
 four.next = five
 
 p reverse_node(one)
-
-binding.pry
