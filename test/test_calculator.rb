@@ -10,5 +10,4 @@ class TestCalculator < Minitest::Test
     assert_equal(2, @calc.add(1, 1))
     assert_equal(1, @calc.subtract(2, 1))
   end
-
 end
