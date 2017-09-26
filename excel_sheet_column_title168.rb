@@ -4,13 +4,12 @@ def convert_to_title(n)
   lo = 'a'
   hi = 'z'
   convert_arr =
-    (1..26).map do |i|
+    (1..2).map do |i|
       lo = lo + 'a'
-      hi = 'a' + hi
+      hi = 'z' + hi
       generator_arr(lo, hi)
     end
     convert_arr.insert(0, tmp_arr).flatten[n]
-
 end
 
 def generator_arr(start_t, end_t)
