@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require '../find_minimum_in_rotated_arrayII154'
+require_relative '../find_minimum_in_rotated_arrayII154'
 require 'benchmark'
 
 class TestRotate < Minitest::Test

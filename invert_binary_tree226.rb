@@ -12,7 +12,6 @@
 #   end
 # end
 
-
 def invert_binary_tree(tree)
   return nil if tree.nil?
 

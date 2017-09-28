@@ -6,7 +6,6 @@ def find_min(nums)
   nums.rotate(rand(1..10)).min
 end
 
-
 arr = Array.new(10) { rand(1..100) }.sort.uniq
 
 printf "arr values is: #{arr}\n"
