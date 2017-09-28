@@ -7,16 +7,14 @@
 class Stack
   def initialize
     @arr = []
-    @n = 0
   end
 
   def empty?
-    @n == 0
+    @n.size.zero?
   end
 
   def push(x)
     @arr.push(x)
-    @n += 1
   end
 
   def pop
@@ -30,6 +28,6 @@ class Stack
   end
 
   def size
-    @n
+    @arr.size
   end
 end
