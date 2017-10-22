@@ -1,3 +1,5 @@
+# tree structure didn't define
+
 def reverse_tree(tree)
   return if(tree.nil?)
 
