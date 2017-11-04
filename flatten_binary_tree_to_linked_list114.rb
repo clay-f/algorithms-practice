@@ -50,7 +50,6 @@ class TreeNode
   end
 end
 
-
 class Node
   attr_accessor :node, :next
 
