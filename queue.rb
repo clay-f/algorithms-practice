@@ -14,4 +14,14 @@ class Queue
   def size
     @store.size
   end
+
+  def iterator
+    @store
+  end
 end
+
+queue = Queue.new
+queue.enqueue(1)
+queue.enqueue("a")
+queue.enqueue("hello")
+queue.enqueue("world")
