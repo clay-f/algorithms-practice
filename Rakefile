@@ -1,13 +1,9 @@
-task default: %w[test]
+require 'rake'
+require 'rake/testtask'
 
-desc "test"
-task :test do
-  ruby "test/test_calculator.rb"
-  ruby "test/test_stack.rb"
-  ruby "test/test_find_minum_in_rotate_arr.rb"
-end
+task default: :default
 
-desc "about"
-task :about do
-  puts "hello,  my task is about"
+desc "default test"
+task :default do
+  puts "hello world"
 end

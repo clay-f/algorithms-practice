@@ -19,9 +19,3 @@ class Queue
     @store
   end
 end
-
-queue = Queue.new
-queue.enqueue(1)
-queue.enqueue("a")
-queue.enqueue("hello")
-queue.enqueue("world")
