@@ -1,5 +1,3 @@
-require 'pry'
-
 # Definition for singly-linked list.
 # class ListNode
 #     attr_accessor :val, :next
