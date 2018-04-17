@@ -8,8 +8,6 @@
  *
  ******************************************************************************/
 
-package edu.princeton.cs.algs4;
-
 /**
  *  The {@code LinearProbingHashST} class represents a symbol table of generic
  *  key-value pairs.

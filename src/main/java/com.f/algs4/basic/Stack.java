@@ -19,8 +19,6 @@
  *
  ******************************************************************************/
 
-package edu.princeton.cs.algs4;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 

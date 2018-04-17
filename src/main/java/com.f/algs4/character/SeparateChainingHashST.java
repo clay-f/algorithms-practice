@@ -1,80 +1,86 @@
 /******************************************************************************
- *  Compilation:  javac SequentialSearchST.java
- *  Execution:    java SequentialSearchST
+ *  Compilation:  javac SeparateChainingHashST.java
+ *  Execution:    java SeparateChainingHashST < input.txt
  *  Dependencies: StdIn.java StdOut.java
- *  Data files:   http://algs4.cs.princeton.edu/31elementary/tinyST.txt
+ *  Data files:   http://algs4.cs.princeton.edu/34hash/tinyST.txt
  *
- *  Symbol table implementation with sequential search in an
- *  unordered linked list of key-value pairs.
- *
- *  % more tinyST.txt
- *  S E A R C H E X A M P L E
- *
- *  % java SequentialSearchST < tiny.txt
- *  L 11
- *  P 10
- *  M 9
- *  X 7
- *  H 5
- *  C 4
- *  R 3
- *  A 8
- *  E 12
- *  S 0
+ *  A symbol table implemented with a separate-chaining hash table.
  *
  ******************************************************************************/
 
-package edu.princeton.cs.algs4;
-
 /**
- *  The {@code SequentialSearchST} class represents an (unordered)
- *  symbol table of generic key-value pairs.
+ *  The {@code SeparateChainingHashST} class represents a symbol table of generic
+ *  key-value pairs.
  *  It supports the usual <em>put</em>, <em>get</em>, <em>contains</em>,
  *  <em>delete</em>, <em>size</em>, and <em>is-empty</em> methods.
  *  It also provides a <em>keys</em> method for iterating over all of the keys.
  *  A symbol table implements the <em>associative array</em> abstraction:
  *  when associating a value with a key that is already in the symbol table,
  *  the convention is to replace the old value with the new value.
- *  The class also uses the convention that values cannot be {@code null}. Setting the
+ *  Unlike {@link java.util.Map}, this class uses the convention that
+ *  values cannot be {@code null}—setting the
  *  value associated with a key to {@code null} is equivalent to deleting the key
  *  from the symbol table.
  *  <p>
- *  This implementation uses a singly-linked list and sequential search.
- *  It relies on the {@code equals()} method to test whether two keys
- *  are equal. It does not call either the {@code compareTo()} or
- *  {@code hashCode()} method.
- *  The <em>put</em> and <em>delete</em> operations take linear time; the
- *  <em>get</em> and <em>contains</em> operations takes linear time in the worst case.
+ *  This implementation uses a separate chaining hash table. It requires that
+ *  the key type overrides the {@code equals()} and {@code hashCode()} methods.
+ *  The expected time per <em>put</em>, <em>contains</em>, or <em>remove</em>
+ *  operation is constant, subject to the uniform hashing assumption.
  *  The <em>size</em>, and <em>is-empty</em> operations take constant time.
  *  Construction takes constant time.
  *  <p>
- *  For additional documentation, see <a href="http://algs4.cs.princeton.edu/31elementary">Section 3.1</a> of
+ *  For additional documentation, see <a href="http://algs4.cs.princeton.edu/34hash">Section 3.4</a> of
  *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
+ *  For other implementations, see {@link ST}, {@link BinarySearchST},
+ *  {@link SequentialSearchST}, {@link BST}, {@link RedBlackBST}, and
+ *  {@link LinearProbingHashST},
  *
  *  @author Robert Sedgewick
  *  @author Kevin Wayne
  */
-public class SequentialSearchST<Key, Value> {
-    private int n;           // number of key-value pairs
-    private Node first;      // the linked list of key-value pairs
+public class SeparateChainingHashST<Key, Value> {
+    private static final int INIT_CAPACITY = 4;
 
-    // a helper linked list data type
-    private class Node {
-        private Key key;
-        private Value val;
-        private Node next;
+    private int n;                                // number of key-value pairs
+    private int m;                                // hash table size
+    private SequentialSearchST<Key, Value>[] st;  // array of linked-list symbol tables
 
-        public Node(Key key, Value val, Node next)  {
-            this.key  = key;
-            this.val  = val;
-            this.next = next;
-        }
-    }
 
     /**
      * Initializes an empty symbol table.
      */
-    public SequentialSearchST() {
+    public SeparateChainingHashST() {
+        this(INIT_CAPACITY);
+    }
+
+    /**
+     * Initializes an empty symbol table with {@code m} chains.
+     * @param m the initial number of chains
+     */
+    public SeparateChainingHashST(int m) {
+        this.m = m;
+        st = (SequentialSearchST<Key, Value>[]) new SequentialSearchST[m];
+        for (int i = 0; i < m; i++)
+            st[i] = new SequentialSearchST<Key, Value>();
+    }
+
+    // resize the hash table to have the given number of chains,
+    // rehashing all of the keys
+    private void resize(int chains) {
+        SeparateChainingHashST<Key, Value> temp = new SeparateChainingHashST<Key, Value>(chains);
+        for (int i = 0; i < m; i++) {
+            for (Key key : st[i].keys()) {
+                temp.put(key, st[i].get(key));
+            }
+        }
+        this.m  = temp.m;
+        this.n  = temp.n;
+        this.st = temp.st;
+    }
+
+    // hash value between 0 and m-1
+    private int hash(Key key) {
+        return (key.hashCode() & 0x7fffffff) % m;
     }
 
     /**
@@ -110,20 +116,17 @@ public class SequentialSearchST<Key, Value> {
     }
 
     /**
-     * Returns the value associated with the given key in this symbol table.
+     * Returns the value associated with the specified key in this symbol table.
      *
      * @param  key the key
-     * @return the value associated with the given key if the key is in the symbol table
-     *     and {@code null} if the key is not in the symbol table
+     * @return the value associated with {@code key} in the symbol table;
+     *         {@code null} if no such value
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
     public Value get(Key key) {
         if (key == null) throw new IllegalArgumentException("argument to get() is null");
-        for (Node x = first; x != null; x = x.next) {
-            if (key.equals(x.key))
-                return x.val;
-        }
-        return null;
+        int i = hash(key);
+        return st[i].get(key);
     }
 
     /**
@@ -143,14 +146,12 @@ public class SequentialSearchST<Key, Value> {
             return;
         }
 
-        for (Node x = first; x != null; x = x.next) {
-            if (key.equals(x.key)) {
-                x.val = val;
-                return;
-            }
-        }
-        first = new Node(key, val, first);
-        n++;
+        // double table size if average length of list >= 10
+        if (n >= 10*m) resize(2*m);
+
+        int i = hash(key);
+        if (!st[i].contains(key)) n++;
+        st[i].put(key, val);
     }
 
     /**
@@ -162,51 +163,44 @@ public class SequentialSearchST<Key, Value> {
      */
     public void delete(Key key) {
         if (key == null) throw new IllegalArgumentException("argument to delete() is null");
-        first = delete(first, key);
+
+        int i = hash(key);
+        if (st[i].contains(key)) n--;
+        st[i].delete(key);
+
+        // halve table size if average length of list <= 2
+        if (m > INIT_CAPACITY && n <= 2*m) resize(m/2);
     }
 
-    // delete key in linked list beginning at Node x
-    // warning: function call stack too large if table is large
-    private Node delete(Node x, Key key) {
-        if (x == null) return null;
-        if (key.equals(x.key)) {
-            n--;
-            return x.next;
-        }
-        x.next = delete(x.next, key);
-        return x;
-    }
-
-
-    /**
-     * Returns all keys in the symbol table as an {@code Iterable}.
-     * To iterate over all of the keys in the symbol table named {@code st},
-     * use the foreach notation: {@code for (Key key : st.keys())}.
-     *
-     * @return all keys in the symbol table
-     */
-    public Iterable<Key> keys()  {
+    // return keys in symbol table as an Iterable
+    public Iterable<Key> keys() {
         Queue<Key> queue = new Queue<Key>();
-        for (Node x = first; x != null; x = x.next)
-            queue.enqueue(x.key);
+        for (int i = 0; i < m; i++) {
+            for (Key key : st[i].keys())
+                queue.enqueue(key);
+        }
         return queue;
     }
 
 
     /**
-     * Unit tests the {@code SequentialSearchST} data type.
+     * Unit tests the {@code SeparateChainingHashST} data type.
      *
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        SequentialSearchST<String, Integer> st = new SequentialSearchST<String, Integer>();
+        SeparateChainingHashST<String, Integer> st = new SeparateChainingHashST<String, Integer>();
         for (int i = 0; !StdIn.isEmpty(); i++) {
             String key = StdIn.readString();
             st.put(key, i);
         }
+
+        // print keys
         for (String s : st.keys())
             StdOut.println(s + " " + st.get(s));
+
     }
+
 }
 
 /******************************************************************************
