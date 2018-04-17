@@ -1,4 +1,4 @@
-/******************************************************************************
+package com.f.algs4.character; /******************************************************************************
  *  Compilation:  javac LinearProbingHashST.java
  *  Execution:    java LinearProbingHashST < input.txt
  *  Dependencies: StdIn.java StdOut.java
@@ -7,6 +7,10 @@
  *  Symbol-table implementation with linear-probing hash table.
  *
  ******************************************************************************/
+
+import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
 
 /**
  *  The {@code LinearProbingHashST} class represents a symbol table of generic

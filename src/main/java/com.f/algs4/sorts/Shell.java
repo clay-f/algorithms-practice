@@ -1,3 +1,5 @@
+package com.f.algs4.sorts;
+
 public class Shell {
 
     // This class should not be instantiated.

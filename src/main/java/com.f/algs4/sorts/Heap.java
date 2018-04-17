@@ -1,103 +1,85 @@
-/******************************************************************************
- *  Compilation:  javac Quick3way.java
- *  Execution:    java Quick3way < input.txt
+package com.f.algs4.sorts; /******************************************************************************
+ *  Compilation:  javac Heap.java
+ *  Execution:    java Heap < input.txt
  *  Dependencies: StdOut.java StdIn.java
- *  Data files:   http://algs4.cs.princeton.edu/23quicksort/tiny.txt
- *                http://algs4.cs.princeton.edu/23quicksort/words3.txt
+ *  Data files:   http://algs4.cs.princeton.edu/24pq/tiny.txt
+ *                http://algs4.cs.princeton.edu/24pq/words3.txt
  *
- *  Sorts a sequence of strings from standard input using 3-way quicksort.
+ *  Sorts a sequence of strings from standard input using heapsort.
  *
  *  % more tiny.txt
  *  S O R T E X A M P L E
  *
- *  % java Quick3way < tiny.txt
+ *  % java Heap < tiny.txt
  *  A E E L M O P R S T X                 [ one string per line ]
  *
  *  % more words3.txt
  *  bed bug dad yes zoo ... all bad yet
  *
- *  % java Quick3way < words3.txt
- *  all bad bed bug dad ... yes yet zoo    [ one string per line ]
+ *  % java Heap < words3.txt
+ *  all bad bed bug dad ... yes yet zoo   [ one string per line ]
  *
  ******************************************************************************/
 
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
+
 /**
- *  The {@code Quick3way} class provides static methods for sorting an
- *  array using quicksort with 3-way partitioning.
+ *  The {@code Heap} class provides a static methods for heapsorting
+ *  an array.
  *  <p>
- *  For additional documentation, see <a href="http://algs4.cs.princeton.edu/21elementary">Section 2.1</a> of
+ *  For additional documentation, see <a href="http://algs4.cs.princeton.edu/24pq">Section 2.4</a> of
  *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
  *
  *  @author Robert Sedgewick
  *  @author Kevin Wayne
  */
-public class Quick3way {
+public class Heap {
 
     // This class should not be instantiated.
-    private Quick3way() { }
+    private Heap() { }
 
     /**
      * Rearranges the array in ascending order, using the natural order.
-     * @param a the array to be sorted
+     * @param pq the array to be sorted
      */
-    public static void sort(Comparable[] a) {
-        StdRandom.shuffle(a);
-        sort(a, 0, a.length - 1);
-        assert isSorted(a);
-    }
-
-    // quicksort the subarray a[lo .. hi] using 3-way partitioning
-    private static void sort(Comparable[] a, int lo, int hi) {
-        if (hi <= lo) return;
-        int lt = lo, gt = hi;
-        Comparable v = a[lo];
-        int i = lo;
-        while (i <= gt) {
-            int cmp = a[i].compareTo(v);
-            if      (cmp < 0) exch(a, lt++, i++);
-            else if (cmp > 0) exch(a, i, gt--);
-            else              i++;
+    public static void sort(Comparable[] pq) {
+        int n = pq.length;
+        for (int k = n/2; k >= 1; k--)
+            sink(pq, k, n);
+        while (n > 1) {
+            exch(pq, 1, n--);
+            sink(pq, 1, n);
         }
-
-        // a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi].
-        sort(a, lo, lt-1);
-        sort(a, gt+1, hi);
-        assert isSorted(a, lo, hi);
     }
-
-
 
    /***************************************************************************
-    *  Helper sorting functions.
+    * Helper functions to restore the heap invariant.
     ***************************************************************************/
 
-    // is v < w ?
-    private static boolean less(Comparable v, Comparable w) {
-        return v.compareTo(w) < 0;
+    private static void sink(Comparable[] pq, int k, int n) {
+        while (2*k <= n) {
+            int j = 2*k;
+            if (j < n && less(pq, j, j+1)) j++;
+            if (!less(pq, k, j)) break;
+            exch(pq, k, j);
+            k = j;
+        }
     }
-
-    // exchange a[i] and a[j]
-    private static void exch(Object[] a, int i, int j) {
-        Object swap = a[i];
-        a[i] = a[j];
-        a[j] = swap;
-    }
-
 
    /***************************************************************************
-    *  Check if array is sorted - useful for debugging.
+    * Helper functions for comparisons and swaps.
+    * Indices are "off-by-one" to support 1-based indexing.
     ***************************************************************************/
-    private static boolean isSorted(Comparable[] a) {
-        return isSorted(a, 0, a.length - 1);
+    private static boolean less(Comparable[] pq, int i, int j) {
+        return pq[i-1].compareTo(pq[j-1]) < 0;
     }
 
-    private static boolean isSorted(Comparable[] a, int lo, int hi) {
-        for (int i = lo + 1; i <= hi; i++)
-            if (less(a[i], a[i-1])) return false;
-        return true;
+    private static void exch(Object[] pq, int i, int j) {
+        Object swap = pq[i-1];
+        pq[i-1] = pq[j-1];
+        pq[j-1] = swap;
     }
-
-
 
     // print array to standard output
     private static void show(Comparable[] a) {
@@ -107,17 +89,16 @@ public class Quick3way {
     }
 
     /**
-     * Reads in a sequence of strings from standard input; 3-way
-     * quicksorts them; and prints them to standard output in ascending order.
+     * Reads in a sequence of strings from standard input; heapsorts them;
+     * and prints them to standard output in ascending order.
      *
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
         String[] a = StdIn.readAllStrings();
-        Quick3way.sort(a);
+        Heap.sort(a);
         show(a);
     }
-
 }
 
 /******************************************************************************

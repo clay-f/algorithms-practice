@@ -24,6 +24,8 @@
  *
  ******************************************************************************/
 
+import edu.princeton.cs.algs4.Queue;
+
 /**
  *  The {@code SequentialSearchST} class represents an (unordered)
  *  symbol table of generic key-value pairs.

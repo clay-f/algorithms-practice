@@ -1,4 +1,4 @@
-/******************************************************************************
+package com.f.algs4.sorts; /******************************************************************************
  *  Compilation:  javac Selection.java
  *  Execution:    java  Selection < input.txt
  *  Dependencies: StdOut.java StdIn.java
@@ -20,6 +20,9 @@
  *  all bad bed bug dad ... yes yet zoo    [ one string per line ]
  *
  ******************************************************************************/
+
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Comparator;
 

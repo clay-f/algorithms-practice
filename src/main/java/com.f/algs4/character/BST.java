@@ -23,6 +23,8 @@
  *
  ******************************************************************************/
 
+import edu.princeton.cs.algs4.Queue;
+
 import java.util.NoSuchElementException;
 
 /**

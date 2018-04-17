@@ -1,4 +1,4 @@
-/******************************************************************************
+package com.f.algs4.character; /******************************************************************************
  *  Compilation:  javac SeparateChainingHashST.java
  *  Execution:    java SeparateChainingHashST < input.txt
  *  Dependencies: StdIn.java StdOut.java
@@ -7,6 +7,11 @@
  *  A symbol table implemented with a separate-chaining hash table.
  *
  ******************************************************************************/
+
+import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.SequentialSearchST;
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
 
 /**
  *  The {@code SeparateChainingHashST} class represents a symbol table of generic
