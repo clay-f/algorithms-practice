@@ -2,15 +2,15 @@ package com.f.algs4.basic;
 
 import java.util.Iterator;
 
-public class Bag<Item> implements Iterable<Item> {
+public class Stack<Item> implements Iterable<Item> {
     private Node first;
-    private int N;
+    private Integer N = 0;
 
     private class Node {
         Item item;
         Node next;
 
-        public Node () {
+        public Node() {
 
         }
 
@@ -20,16 +20,27 @@ public class Bag<Item> implements Iterable<Item> {
         }
     }
 
-    public void add(Item item) {
+    public void push(Item item) {
+        if (item == null) return;
         Node oldFirst = first;
         first = new Node(item);
         first.next = oldFirst;
         N++;
     }
 
+    public Item pop() {
+        Item item = first.item;
+        first = first.next;
+        return item;
+    }
+
+    @Override
+    public Iterator<Item> iterator() {
+        return new ListIterator();
+    }
+
     private class ListIterator implements Iterator<Item> {
         private Node current = first;
-
         @Override
         public boolean hasNext() {
             return current != null;
@@ -43,17 +54,11 @@ public class Bag<Item> implements Iterable<Item> {
         }
     }
 
-    @Override
-    public Iterator<Item> iterator() {
-        return new ListIterator();
-    }
-
-    public int size() {
-        return N;
-    }
-
     public boolean empty() {
         return N == 0;
     }
 
+    public Integer size() {
+        return N;
+    }
 }

@@ -27,7 +27,7 @@ public class Queue<Item> implements Iterable<Item> {
     }
 
     public boolean empty() {
-        return N > 0;
+        return N == 0;
     }
 
     public void enqueue(Item item) {
